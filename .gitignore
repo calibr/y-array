@@ -6,3 +6,5 @@ bower_components
 .codio
 .settings
 .vscode
+*.sublime-project
+*.sublime-workspace

@@ -77,7 +77,8 @@ function extend (Y) {
             object: this,
             index: pos,
             values: values,
-            length: length
+            length: length,
+            local: op.local === true
           })
         } else if (op.struct === 'Delete') {
           var i = 0 // current position in _content
@@ -110,7 +111,8 @@ function extend (Y) {
                 index: i,
                 values: values,
                 _content: content,
-                length: delLength
+                length: delLength,
+                local: op.local === true
               })
               // with the fresh delete op, we can continue
               // note: we don't have to increment i, because the i-th content was deleted
@@ -268,7 +270,8 @@ function extend (Y) {
         dels.push({
           target: targetId,
           struct: 'Delete',
-          length: delLength
+          length: delLength,
+          local: true
         })
       }
       this.os.requestTransaction(function *() {
