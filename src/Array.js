@@ -16,6 +16,7 @@ function extend (Y) {
 
       // this._debugEvents = [] // TODO: remove!!
       this.eventHandler = new Y.utils.EventHandler((op) => {
+        let opOrig = Object.assign({}, op)
         // this._debugEvents.push(JSON.parse(JSON.stringify(op)))
         if (op.struct === 'Insert') {
           // when using indexeddb db adapter, the op could already exist (see y-js/y-indexeddb#2)
@@ -33,7 +34,7 @@ function extend (Y) {
               return Y.utils.compareIds(c.id, op.left)
             })
             if (pos <= 0) {
-              throw new Error('Unexpected operation!')
+              throw new Error('Unexpected operation! ' + JSON.stringify(op))
             }
           }
           /* (see above for new approach)
@@ -78,7 +79,8 @@ function extend (Y) {
             index: pos,
             values: values,
             length: length,
-            local: op.local === true
+            local: op.local === true,
+            op: opOrig
           })
         } else if (op.struct === 'Delete') {
           var i = 0 // current position in _content
@@ -112,7 +114,8 @@ function extend (Y) {
                 values: values,
                 _content: content,
                 length: delLength,
-                local: op.local === true
+                local: op.local === true,
+                op: opOrig
               })
               // with the fresh delete op, we can continue
               // note: we don't have to increment i, because the i-th content was deleted
@@ -311,6 +314,9 @@ function extend (Y) {
           if (op.opContent != null) {
             yield* transaction.store.initType.call(transaction, op.opContent)
           }
+        }
+        if(transaction._opts) {
+          op.sender = transaction._opts.sender
         }
         this.eventHandler.receivedOp(op)
       }

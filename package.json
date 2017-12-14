@@ -7,10 +7,6 @@
     "test": "node --harmony ./node_modules/.bin/gulp test",
     "lint": "./node_modules/.bin/standard"
   },
-  "pre-commit": [
-    "lint",
-    "test"
-  ],
   "standard": {
     "parser": "babel-eslint",
     "ignore": [
