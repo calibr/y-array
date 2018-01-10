@@ -5,6 +5,7 @@ function extend (Y) {
   class YArray extends Y.utils.CustomType {
     constructor (os, _model, _content) {
       super()
+      this.origOpts = Object.assign({}, os.dbOpts)
       this.os = os
       this._model = _model
       // Array of all the neccessary content
